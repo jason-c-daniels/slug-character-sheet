@@ -1,0 +1,38 @@
+
+main {
+    text-align: left;
+    padding: 0;
+    margin: 0 0;
+}
+
+.drawer-header {
+    margin-left: 16px; margin-bottom: -1em; margin-top:-1em;
+}
+
+@media print {
+    .noprint {
+        display: none !important;
+    }
+    .printme {
+        display: block !important;
+    }
+
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    main {
+        text-align: left;
+        padding: 0;
+        margin: 0.5in;
+        width: 7.5in;
+        height: 10in;
+    }
+}
+
+.printme {
+    display: none;
+}
