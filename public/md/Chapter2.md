@@ -1,5 +1,5 @@
 
-## Chapter 2: Action Resolution
+#### Chapter 2: Action Resolution
 
 When the GM asks a player to roll some
 dice, the player should roll some dice. The GM
@@ -11,7 +11,7 @@ better (unless the GM says otherwise). The
 GM rolls in secret on occasion, mostly for
 information rolls.
 
-### Examples:
+###### Examples
 
 __Player:__ "Andarra creates an illusion of a large,
 angry dragon."
@@ -40,7 +40,7 @@ a 3 and a 5, and reading them as percentiles for a result of 35%):_
 "You can't quite place it - definitely not Italian, though, 
 and probably not Spanish."
 
-### Modifiers:
+###### Modifiers
 
 The GM may assign a modifier to the Action Resolution Roll. 
 A modifier may be of any appropriate amount, up or down, 

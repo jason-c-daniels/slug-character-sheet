@@ -1,3 +1,40 @@
 /** This is the style information for CharacterSheet.svelte */
 
-/* TODO: Fill in the styles needed to make CharacterSheet.svelte work. */
+.copyright-box {
+    color: #444;
+}
+
+.single-column-content {
+
+    text-align: justify;
+}
+
+.three-column-content {
+    column-count: 3;
+    text-align: justify;
+}
+
+.copyright-box {
+    padding-top: 2.6em;
+    font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+    float:right;
+    font-size: 8.7pt;
+    color: #666666;
+}
+section {
+    display:block;
+}
+section:after {
+    clear: both;
+}
+
+#the-end h2 {
+    margin-top: 5pt;
+    margin-bottom: 2pt;
+    font-family: Impact, Charcoal, sans-serif;
+    border-top: #333333 solid 1pt;
+    border-bottom: #333333 solid 1pt;
+    text-align: center;
+    font-weight: normal;
+    text-transform: capitalize;
+}

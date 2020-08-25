@@ -1,4 +1,4 @@
-## Chapter 1: Character Creation
+#### Chapter 1: Character Creation
 
 Each character is described any way the
 player wants. Use words, numbers, pictures,
@@ -9,7 +9,7 @@ before play begins. The GM can modify outrageous proposals,
 suggest appropriate changes, or ban the character from a 
 particular adventure or campaign.
 
-### Examples:
+###### Examples
 
 "__Grok__ is strong, very strong. He's never met
 anyone stronger. He's not real bright, but

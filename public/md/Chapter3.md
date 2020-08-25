@@ -1,4 +1,4 @@
-## Chapter 3: Character Development
+#### Chapter 3: Character Development
 
 As the game progresses, a character will
 encounter situations that will test things that
@@ -6,7 +6,7 @@ weren't written down at first. The player should
 explain to the GM how good the character is in
 such a situation.
 
-###Examples:
+###### Examples
 
 "Oh, yes, Grok's climbed lots of cliffs before,"
 

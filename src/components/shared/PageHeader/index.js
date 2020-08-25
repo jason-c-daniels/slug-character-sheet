@@ -1,1 +1,1 @@
-export {default as default} from './GameRules.svelte';
+export {default as default} from './PageHeader.svelte';

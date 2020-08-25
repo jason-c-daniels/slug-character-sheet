@@ -4,7 +4,8 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "start": "sirv public --port 5002"
+    "start": "sirv public --port 5002",
+    "serve": "sirv public --port 5002 --host"
   },
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "^2.3.0",
@@ -39,6 +40,7 @@
     "autoprefixer": "^9.8.6",
     "cssnano": "latest",
     "file-saver": "^2.0.2",
+    "marked": "^1.1.1",
     "postcss": "^7.0.32",
     "postcss-import": "^12.0.1",
     "postcss-load-config": "^2.1.0",

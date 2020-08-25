@@ -4,13 +4,11 @@
 
 <script>
     import getNewCharacter from '../../model/character'
+    import PageHeader from '../shared/PageHeader'
     export let character = getNewCharacter();
 </script>
 
-<section class="title-box">
-<h1 class="title">SLUG</h1>
-<span class="serif">(Simple, Laid-back, Universal, Game)</span>
-</section>
+<PageHeader />
 <div class="thick-separator"><span>&nbsp;</span></div>
 <section class="character-info">
     <section class="info-box">

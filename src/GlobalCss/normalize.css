@@ -426,3 +426,47 @@ button:not(:disabled):active {
 button:focus {
     border-color: var(--button-border-color-focus);
 }
+
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-col,
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-fixed-size {
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+.single-column-content p,
+.three-column-content p {
+    font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+    font-size: 9.0pt;
+    text-indent: 1em;
+    margin-bottom: 0.5em;
+}
+
+.single-column-content h4,
+.three-column-content h4 {
+    column-span: all;
+    margin-top: 5pt;
+    margin-bottom: 2pt;
+    font-family: 'Comic Sans MS', sans-serif;
+    border-top: #333333 solid 1pt;
+    border-bottom: #333333 solid 1pt;
+    text-align: center;
+    text-transform: capitalize;
+    font-variant: small-caps;
+}
+
+.single-column-content h6,
+.three-column-content h6 {
+    font-size: 9.0pt;
+    font-variant: small-caps;
+}

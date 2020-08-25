@@ -14,16 +14,17 @@
     import getNewCharacter from "../model/character"
     import saveAs from 'file-saver';
     import Dropzone from "svelte-file-dropzone";
+    import GameRules from "../components/GameRules/GameRules.svelte";
 
     export let appSettings = {applicationName: "WARNING: Please pass appSettings from within main.js props."};
 
     let drawerElement; // bind to the drawerElement component so we can open and close it.
 
     let orientationListElement, pageSizeListElement;
-    let largePageHeading=true, pageNumberOnly=true;
+    let largePageHeading = true, pageNumberOnly = true;
     let character = getNewCharacter();
 
-    let disabled="";
+    let disabled = "";
     let showLoadPane = false;
 
     function saveCharacter() {
@@ -33,6 +34,7 @@
 
     function loadCharacter() {
         showLoadPane = true;
+        disabled="disabled";
     }
 
     function newCharacter() {
@@ -54,8 +56,9 @@
 
     function hideLoadPane() {
         showLoadPane = false;
-        disabled="";
+        disabled = "";
     }
+
     function printIt() {
         print();
     }
@@ -79,21 +82,21 @@
     <!-- this section is what the user interacts with to edit their data. It'll contain
     all sorts of UI controls that you do NOT want to printout. -->
             <mwc-top-app-bar-fixed>
-                <mwc-icon-button icon="menu" slot="navigationIcon"
-                                 on:click={()=>drawerElement.open = !drawerElement.open}></mwc-icon-button>
                 <div slot="title"><span>{appSettings.applicationName}</span></div>
-                <mwc-icon-button icon="create" slot="actionItems" on:click={newCharacter}></mwc-icon-button>
+                <mwc-icon-button icon="create" slot="actionItems" on:click={newCharacter} {disabled}></mwc-icon-button>
                 {#if showLoadPane}
                     <mwc-icon-button icon="clear" slot="actionItems" on:click={hideLoadPane}></mwc-icon-button>
                 {:else}
                     <mwc-icon-button icon="file_upload" slot="actionItems" on:click={loadCharacter}></mwc-icon-button>
                 {/if}
-                <mwc-icon-button icon="file_download" slot="actionItems" on:click={saveCharacter}></mwc-icon-button>
-                <mwc-icon-button icon="print" slot="actionItems" on:click={printIt}></mwc-icon-button>
+                <mwc-icon-button icon="file_download" slot="actionItems" on:click={saveCharacter} {disabled}></mwc-icon-button>
+                <mwc-icon-button icon="print" slot="actionItems" on:click={printIt} {disabled}></mwc-icon-button>
                 <div id="content" style="margin: 10pt;">
                     <div class="page">
-                        <!-- App Content -->
                         <CharacterSheet bind:character={character} />
+                    </div>
+                    <div class="page">
+                        <GameRules />
                     </div>
                 </div>
             </mwc-top-app-bar-fixed>
@@ -112,5 +115,8 @@
      -->
     <div class="page">
         <CharacterSheet bind:character={character} />
+    </div>
+    <div class="page">
+        <GameRules />
     </div>
 </main>
