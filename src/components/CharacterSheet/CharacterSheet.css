@@ -1,0 +1,68 @@
+/** This is the style information for CharacterSheet.svelte */
+textarea,
+.serif {
+    font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+}
+
+.box-title {
+    font-family: 'Comic Sans MS', sans-serif;
+    border-top: #333333 solid 1pt;
+    text-align: center;
+    text-transform: capitalize;
+    font-variant: small-caps;
+}
+
+.info-box textarea {
+    width:100%;
+    height:auto;
+    border: #333333 solid 1pt;
+    resize: none;
+}
+
+.title {
+    font-family: Impact, Charcoal, sans-serif;
+    padding: 0;
+    margin: 0;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 42pt;
+    height: 40pt;
+    font-stretch: ultra-expanded;
+}
+
+.thick-separator {
+    border-bottom: #333333 solid 1pt;
+    height:3pt;
+    padding:0;
+    margin:0;
+}
+
+.title-box {
+    text-align: center;
+    margin: 3pt 3pt;
+    padding:0;
+    border: #333333 solid 1pt;
+
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.title-box span {
+    font-size: 8pt;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-col,
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-fixed-size {
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+

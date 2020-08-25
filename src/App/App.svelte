@@ -10,6 +10,10 @@
     import '@material/mwc-list/mwc-list-item';
     import '@material/mwc-list/mwc-check-list-item';
     import '@material/mwc-list/mwc-radio-list-item';
+    import CharacterSheet from "../components/CharacterSheet"
+    import getNewCharacter from "../model/character"
+    import saveAs from 'file-saver';
+    import Dropzone from "svelte-file-dropzone";
 
     export let appSettings = {applicationName: "WARNING: Please pass appSettings from within main.js props."};
 
@@ -17,18 +21,41 @@
 
     let orientationListElement, pageSizeListElement;
     let largePageHeading=true, pageNumberOnly=true;
+    let character = getNewCharacter();
 
+    let disabled="";
+    let showLoadPane = false;
 
-    function handlePageHeadingSelected(e) {
-        console.log('handlePageHeadingSelected');
-        largePageHeading=orientationListElement.querySelectorAll('mwc-radio-list-item')[e.detail.index].value === 'largePageHeading';
+    function saveCharacter() {
+        var blob = new Blob([JSON.stringify(character, null, 2)], {type: "text/plain;charset=utf-8"});
+        saveAs(blob, "character.slug");
     }
 
-    function handleFooterOptionSelected(e) {
-        console.log('handleFooterOptionSelected');
-        pageNumberOnly=pageSizeListElement.querySelectorAll('mwc-radio-list-item')[e.detail.index].value === 'pageNumberOnly';
+    function loadCharacter() {
+        showLoadPane = true;
     }
 
+    function newCharacter() {
+        character = getNewCharacter();
+    }
+
+    function handleFilesSelect(e) {
+        let files = e.detail.acceptedFiles;
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            // e.target.result should contain the text
+            let text = e.target.result;
+            character = JSON.parse(text);
+            showLoadPane = false;
+        };
+        reader.readAsText(files[0]);
+
+    }
+
+    function hideLoadPane() {
+        showLoadPane = false;
+        disabled="";
+    }
     function printIt() {
         print();
     }
@@ -51,50 +78,31 @@
 <main class="noprint">
     <!-- this section is what the user interacts with to edit their data. It'll contain
     all sorts of UI controls that you do NOT want to printout. -->
-    <mwc-drawer hasHeader type="modal" bind:this={drawerElement}>
-        <span slot="title">Manage Notes</span>
-        <span slot="subtitle">Manage the entire list</span>
-        <div>
-            <!-- Drawer Content -->
-            <mwc-list>
-                <mwc-list-item graphic="avatar">
-                    <span>Clear Notes</span>
-                    <mwc-icon slot="graphic">cancel</mwc-icon>
-                </mwc-list-item>
-                <mwc-list-item graphic="avatar">
-                    <span>avatar item</span>
-                    <mwc-icon slot="graphic">folder</mwc-icon>
-                </mwc-list-item>
-            </mwc-list>
-            <mwc-list bind:this={orientationListElement} on:selected={handlePageHeadingSelected} >
-                <li role="separator" class="drawer-header"><h3>Print Options</h3></li>
-                <li divider role="separator" style="margin-left: 16px;"></li>
-                <mwc-radio-list-item selected="{!largePageHeading}" value="smallPageHeading">Small Page Header</mwc-radio-list-item>
-                <mwc-radio-list-item selected="{largePageHeading}" value="largePageHeading">Large Page Header</mwc-radio-list-item>
-            </mwc-list>
-            <mwc-list bind:this={pageSizeListElement} on:selected={handleFooterOptionSelected}>
-                <li divider role="separator" style="margin-left: 16px;"></li>
-                <mwc-radio-list-item group="c" selected="{!pageNumberOnly}" value="detailedFooter">Detailed Footer</mwc-radio-list-item>
-                <mwc-radio-list-item group="c" selected="{pageNumberOnly}" value="pageNumberOnly">Page Number Only</mwc-radio-list-item>
-            </mwc-list>
-        </div>
-        <div slot="appContent">
             <mwc-top-app-bar-fixed>
                 <mwc-icon-button icon="menu" slot="navigationIcon"
                                  on:click={()=>drawerElement.open = !drawerElement.open}></mwc-icon-button>
                 <div slot="title"><span>{appSettings.applicationName}</span></div>
-                <mwc-icon-button icon="file_download" slot="actionItems"></mwc-icon-button>
-                <mwc-icon-button icon="file_upload" slot="actionItems"></mwc-icon-button>
+                <mwc-icon-button icon="create" slot="actionItems" on:click={newCharacter}></mwc-icon-button>
+                {#if showLoadPane}
+                    <mwc-icon-button icon="clear" slot="actionItems" on:click={hideLoadPane}></mwc-icon-button>
+                {:else}
+                    <mwc-icon-button icon="file_upload" slot="actionItems" on:click={loadCharacter}></mwc-icon-button>
+                {/if}
+                <mwc-icon-button icon="file_download" slot="actionItems" on:click={saveCharacter}></mwc-icon-button>
                 <mwc-icon-button icon="print" slot="actionItems" on:click={printIt}></mwc-icon-button>
                 <div id="content" style="margin: 10pt;">
-                    <div>
+                    <div class="page">
                         <!-- App Content -->
-
+                        <CharacterSheet bind:character={character} />
                     </div>
                 </div>
             </mwc-top-app-bar-fixed>
+
+    {#if (showLoadPane)}
+        <div class="noprint file-loader" >
+            <Dropzone on:drop={handleFilesSelect}  containerStyles="height:100%"/>
         </div>
-    </mwc-drawer>
+    {/if}
 </main>
 
 <main class="printme" style="margin: 0.5in">
@@ -102,23 +110,7 @@
          to HTML if you like, but you'll need to ensure it's been rendered right before the print dialog is invoked.
          (i.e. print() )
      -->
-    <div style="height: 80%; margin: 1.0in; padding: 0">
-        <div class="page-header">
-            {#if largePageHeading}
-            <h1 style="text-align: center">Large Page Heading</h1>
-            {:else}
-            <h4 style="text-align: center">Small Page Heading</h4>
-            {/if}
-        </div>
-        <div>
-            Put your content to actually print here. Adjust it based on settings (if any)
-            <p>{JSON.stringify({  pageNumberOnly, largePageHeading})}</p>
-        </div>
-        <div style="position: absolute; bottom: 1in; display: block;width: 90%">
-            {#if (!pageNumberOnly)}
-                <h6 style="margin:0; padding:0; text-align: center; display: inline-block; position: relative; float: left">document details</h6>
-            {/if}
-            <div style="display: inline-block; position: relative; float: right"><span>Page 1</span></div>
-        </div>
+    <div class="page">
+        <CharacterSheet bind:character={character} />
     </div>
 </main>

@@ -26,13 +26,51 @@ main {
 
     main {
         text-align: left;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    .page {
+        box-shadow: none !important;
+        overflow: hidden !important;
+        margin: auto auto !important;
+        page-break-before: always;
+        width: 8.5in !important;
+        height: 11in !important;
         padding: 0;
-        margin: 0.5in;
-        width: 7.5in;
-        height: 10in;
+
     }
 }
 
 .printme {
     display: none;
+}
+
+.page {
+    width: 8.5in;
+    height: 11in;
+    padding: 0.5in;
+    margin: 5rem auto;
+    overflow: hidden;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+
+.file-loader {
+    z-index: 2000;
+    position: fixed;
+    top: 1.7em;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 100%;
+    background-color: #333333;
+    font-size: 28pt;
+    text-align: center;
+    vertical-align: center;
+}
+
+.file-loader div {
+    display: block;
+    height: 100%;
+    width: 100%;
 }
