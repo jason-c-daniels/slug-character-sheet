@@ -1,11 +1,11 @@
 /** This is the style information for CharacterSheet.svelte */
 textarea,
 .serif {
-    font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+    font-family: 'EB Garamond', serif;
 }
 
 .box-title {
-    font-family: 'Comic Sans MS', sans-serif;
+    font-family: 'Mali', sans-serif;
     border-top: #333333 solid 1pt;
     text-align: center;
     text-transform: capitalize;
@@ -17,6 +17,7 @@ textarea,
     height:auto;
     border: #333333 solid 1pt;
     resize: none;
+
 }
 
 .thick-separator {

@@ -1,4 +1,4 @@
-/* TODO:
-        1. Put the WOFF files and font specific CSS files in public/fonts
-        2. Import the CSS files here. This file is already imported. This will define the font faces globally.
- */
+/* import fonts here, if self hosting, place WOFF files and associated CSS in public/fonts and import the font specific CSS here. */
+
+@import '../../public/fonts/work-sans/work-sans.css';
+@import '../../public/fonts/mali/mali.css';

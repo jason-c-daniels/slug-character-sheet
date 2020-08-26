@@ -60,7 +60,7 @@
     }
 
     function printIt() {
-        print();
+        setTimeout(()=>window.print(),500);
     }
 
 </script>

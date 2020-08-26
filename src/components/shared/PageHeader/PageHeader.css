@@ -1,5 +1,7 @@
 /** This is the style information for CharacterSheet.svelte */
-
+.serif {
+    font-family: 'EB Garamond', serif;
+}
 .title-box {
     text-align: center;
     margin: 3pt 3pt;
@@ -14,11 +16,12 @@
 }
 
 .title {
-    font-family: Impact, Charcoal, sans-serif;
+    font-family: 'Work Sans',  serif;
     padding: 0;
     margin: 0;
     font-style: italic;
     font-size: 42pt;
     height: 40pt;
-    font-stretch: ultra-expanded;
+    font-weight: bold;
+    font-stretch:  ultra-expanded;
 }
