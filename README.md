@@ -1,30 +1,9 @@
-# Svelte Material Web Components Template
+# Slug Character Sheet
 
 ## About
-This is a small Svelte 3 application with a couple of items hooked up, such as a 
-fixed position top application bar and a crude printable section. 
+This is a client side only single page application, for the (semi-)joke, single page, Table Top ROG called SLUG. It was created by Steffan O'Sullivan.
 
-This work is based heavily on my own svelte-postcss-template which is itself 
-based heavily on the work done by the `sveltejs` team on github among others.
+The layout is based on some typesetting I did for the game many years ago. However I couldn't reinstall QuarkXPress so I was unable to determine the fonts that I originally used. So I punted and grabbed some approximate fonts from the creative commons community.
 
-
-## Using this template
-1. As a github template project  you can just click the "Use This Template" button.
-2. Run `npx degit jason-c-daniels/svelte-mwc-template your-project-name`
-3. Download a zip of the master branch from github.
-4. In the project folder run `npm install` to install the dependencies.
-
-## Where to go from here
-You'll need to modify `package.json` and `main.js` with the actual name of your application. 
-(`main.js` passes it to the App component)  From there remove or edit code to begin 
-coding your own application.
-
-## Misc. Notes
-MWC doesn't inherit styling/theming from MDC when 
-used in your application. It overrides what MDC has by setting custom properties. 
-The only way to apply a theme is to change the custom properties.
-
-An example of this exists in `global-properties.css`.
-
-Also, this means that sass is not needed to theme applications made with this 
-template.
+The app features the basic things you would expect of a desktop app: new, load, save, print.
+Since there is no "Name" field, the "saved" (downloaded) file will always be named the same. Be sure to rename it to something meaningful.
