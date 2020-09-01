@@ -7,3 +7,5 @@ The layout is based on some typesetting I did for the game many years ago. Howev
 
 The app features the basic things you would expect of a desktop app: new, load, save, print.
 Since there is no "Name" field, the "saved" (downloaded) file will always be named the same. Be sure to rename it to something meaningful.
+
+### This branch is where the most recent published version of the app runs.
