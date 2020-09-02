@@ -22,10 +22,11 @@
 
     let orientationListElement, pageSizeListElement;
     let largePageHeading = true, pageNumberOnly = true;
-    let character = getNewCharacter();
-
     let disabled = "";
     let showLoadPane = false;
+    let firstCall = true;
+
+    let character = loadFromLocalStorage();
 
     function saveCharacter() {
         var blob = new Blob([JSON.stringify(character, null, 2)], {type: "text/plain;charset=utf-8"});
@@ -61,6 +62,43 @@
 
     function printIt() {
         setTimeout(()=>window.print(),500);
+    }
+
+    function saveToLocalStorage(){
+        console.log("saveToLocalStorage");
+        if (typeof(Storage) !== "undefined") {
+            console.log("autosaving...");
+            // Code for localStorage/sessionStorage.
+            let text=JSON.stringify(character, null, 2);
+
+            console.log(text);
+            localStorage.setItem("slug-character-sheet",text);
+        } else {
+            // Sorry! No Web Storage support... doing nothing
+            console.log("LocalStorage not supported. Did not save.");
+        }
+    }
+
+    function loadFromLocalStorage(){
+        console.log("loadFromLocalStorage");
+        if (typeof(Storage) === "undefined" || localStorage.getItem("slug-character-sheet") === null) {
+            console.log("LocalStorage not supported, or no prior sheet found. Creating new character instead.");
+            scheduleAutosave();
+            return getNewCharacter();
+        } else {
+            scheduleAutosave();
+            console.log("loading character...");
+            let text=localStorage.getItem("slug-character-sheet");
+            console.log("loaded:", text);
+            return JSON.parse(text);
+        }
+    }
+
+    function scheduleAutosave(){
+        if (firstCall) {
+            firstCall=false;
+            setInterval(saveToLocalStorage,5*1000);
+        }
     }
 
 </script>
