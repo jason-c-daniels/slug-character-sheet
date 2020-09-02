@@ -13,7 +13,7 @@
 <section class="character-info">
     <section class="info-box">
         <h4 class="box-title">background information (name, occupation and such)</h4>
-        <textarea bind:value={character.backgroundInfo} rows="7"></textarea>
+        <textarea bind:value={character.backgroundInfo} rows="8"></textarea>
     </section>
     <section class="center-grouping">
         <section class="flex-row">
@@ -25,17 +25,17 @@
 
                 <section class="info-box">
                     <h4 class="box-title">weapons and cool stuff like psi and magic</h4>
-                    <textarea bind:value={character.weaponsPsiAndMagic} rows="7"></textarea>
+                    <textarea bind:value={character.weaponsPsiAndMagic} rows="12"></textarea>
                 </section>
             </section>
             <section class="info-box flex-fixed-size">
                 <h4 class="box-title">miscellaneous gear</h4>
-                <textarea bind:value={character.miscellaneousGear} rows="30"></textarea>
+                <textarea bind:value={character.miscellaneousGear} rows="35"></textarea>
             </section>
         </section>
         <section class="info-box">
             <h4 class="box-title">miscellaneous notes about adventures ...etc.</h4>
-            <textarea bind:value={character.notes} rows="4"></textarea>
+            <textarea bind:value={character.notes} rows="6"></textarea>
         </section>
     </section>
 </section>
