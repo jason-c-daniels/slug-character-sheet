@@ -1,5 +1,4 @@
 /** This is the style information for CharacterSheet.svelte */
-textarea,
 .serif {
     font-family: 'EB Garamond', serif;
 }
@@ -31,5 +30,5 @@ textarea {
     font-family: 'Shadows Into Light', cursive;
     font-weight: 300;
     font-style: normal;
-    font-size: 10.5pt;
+    font-size: 12pt;
 }
