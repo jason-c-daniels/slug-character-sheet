@@ -20,8 +20,8 @@
 
     let drawerElement; // bind to the drawerElement component so we can open and close it.
 
-    let orientationListElement, pageSizeListElement;
-    let largePageHeading = true, pageNumberOnly = true;
+    let printOptionListElement;
+    let printBothPages = true;
     let disabled = "";
     let showLoadPane = false;
     let firstCall = true;
@@ -35,7 +35,7 @@
 
     function loadCharacter() {
         showLoadPane = true;
-        disabled="disabled";
+        disabled = "disabled";
     }
 
     function newCharacter() {
@@ -61,46 +61,50 @@
     }
 
     function printIt() {
-        setTimeout(()=>window.print(),500);
+        setTimeout(() => window.print(), 500);
     }
 
-    function saveToLocalStorage(){
+    function saveToLocalStorage() {
         console.log("saveToLocalStorage");
-        if (typeof(Storage) !== "undefined") {
+        if (typeof (Storage) !== "undefined") {
             console.log("autosaving...");
             // Code for localStorage/sessionStorage.
-            let text=JSON.stringify(character, null, 2);
+            let text = JSON.stringify(character, null, 2);
 
             console.log(text);
-            localStorage.setItem("slug-character-sheet",text);
+            localStorage.setItem("slug-character-sheet", text);
+            localStorage.setItem("slug-print-both",printBothPages);
         } else {
             // Sorry! No Web Storage support... doing nothing
             console.log("LocalStorage not supported. Did not save.");
         }
     }
 
-    function loadFromLocalStorage(){
+    function loadFromLocalStorage() {
         console.log("loadFromLocalStorage");
-        if (typeof(Storage) === "undefined" || localStorage.getItem("slug-character-sheet") === null) {
+        if (typeof (Storage) === "undefined" || localStorage.getItem("slug-character-sheet") === null) {
             console.log("LocalStorage not supported, or no prior sheet found. Creating new character instead.");
             scheduleAutosave();
             return getNewCharacter();
-        } else {
-            scheduleAutosave();
-            console.log("loading character...");
-            let text=localStorage.getItem("slug-character-sheet");
-            console.log("loaded:", text);
-            return JSON.parse(text);
         }
+        scheduleAutosave();
+        console.log("loading character...");
+        let text = localStorage.getItem("slug-character-sheet");
+        printBothPages = localStorage.getItem("slug-print-both") == true || localStorage.getItem("slug-print-both") === null;
+        console.log("loaded:", text);
+        return JSON.parse(text);
     }
 
-    function scheduleAutosave(){
+    function scheduleAutosave() {
         if (firstCall) {
-            firstCall=false;
-            setInterval(saveToLocalStorage,5*1000);
+            firstCall = false;
+            setInterval(saveToLocalStorage, 5 * 1000);
         }
     }
-
+    function handlePrintOptionSelected(e) {
+        console.log('handlePrintOptionSelected');
+        printBothPages = printOptionListElement.querySelectorAll('mwc-radio-list-item')[e.detail.index].value === 'printBothPages';
+    }
 </script>
 <style>
     @import "App.css";
@@ -119,7 +123,21 @@
 <main class="noprint">
     <!-- this section is what the user interacts with to edit their data. It'll contain
     all sorts of UI controls that you do NOT want to printout. -->
+    <mwc-drawer hasHeader type="modal" bind:this={drawerElement} >
+        <span slot="title">Print Settings</span>
+        <span slot="subtitle">What to print...</span>
+        <div>
+            <mwc-list bind:this={printOptionListElement} on:selected={handlePrintOptionSelected} style="margin: 1em; 0">
+                <mwc-radio-list-item selected="{printBothPages}" value="printBothPages">Both Pages
+                </mwc-radio-list-item>
+                <mwc-radio-list-item selected="{!printBothPages}" value="printOnlyCharacterSheet">Only the Character Sheet
+                </mwc-radio-list-item>
+            </mwc-list>
+        </div>
+        <div slot="appContent">
             <mwc-top-app-bar-fixed>
+                <mwc-icon-button icon="menu" slot="navigationIcon"
+                                 on:click={()=>drawerElement.open = !drawerElement.open}></mwc-icon-button>
                 <div slot="title"><span>{appSettings.applicationName}</span></div>
                 <mwc-icon-button icon="create" slot="actionItems" on:click={newCharacter} {disabled}></mwc-icon-button>
                 {#if showLoadPane}
@@ -127,23 +145,28 @@
                 {:else}
                     <mwc-icon-button icon="file_upload" slot="actionItems" on:click={loadCharacter}></mwc-icon-button>
                 {/if}
-                <mwc-icon-button icon="file_download" slot="actionItems" on:click={saveCharacter} {disabled}></mwc-icon-button>
+                <mwc-icon-button icon="file_download" slot="actionItems" on:click={saveCharacter}
+                                 {disabled}></mwc-icon-button>
                 <mwc-icon-button icon="print" slot="actionItems" on:click={printIt} {disabled}></mwc-icon-button>
                 <div id="content" style="margin: 10pt;">
                     <div class="page">
-                        <CharacterSheet bind:character={character} />
+                        <CharacterSheet bind:character={character}/>
                     </div>
-                    <div class="page">
-                        <GameRules />
-                    </div>
+                    {#if printBothPages}
+                        <div class="page">
+                            <GameRules/>
+                        </div>
+                   {/if}
                 </div>
             </mwc-top-app-bar-fixed>
 
-    {#if (showLoadPane)}
-        <div class="noprint file-loader" >
-            <Dropzone on:drop={handleFilesSelect}  containerStyles="height:100%"/>
+            {#if (showLoadPane)}
+                <div class="noprint file-loader">
+                    <Dropzone on:drop={handleFilesSelect} containerStyles="height:100%"/>
+                </div>
+            {/if}
         </div>
-    {/if}
+    </mwc-drawer>
 </main>
 
 <main class="printme" style="margin: 0.5in">
@@ -152,9 +175,11 @@
          (i.e. print() )
      -->
     <div class="page">
-        <CharacterSheet bind:character={character} />
+        <CharacterSheet bind:character={character}/>
     </div>
-    <div class="page">
-        <GameRules />
-    </div>
+    {#if printBothPages}
+        <div class="page">
+            <GameRules/>
+        </div>
+    {/if}
 </main>
