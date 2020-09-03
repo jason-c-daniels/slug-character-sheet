@@ -73,16 +73,18 @@
     function handlePrintOptionSelected(e) {
         console.log('handlePrintOptionSelected');
         viewOptions.printBothPages = printOptionListElement.querySelectorAll('mwc-radio-list-item')[e.detail.index].value === 'printBothPages';
+        localStorageController.saveViewOptions(viewOptions);
     }
 
     function handleSaveOptionSelected(e) {
         console.log('handleSaveOptionSelected');
         viewOptions.saveAlsoDownloads = saveOptionsListElement.querySelectorAll('mwc-radio-list-item')[e.detail.index].value === 'saveAlsoDownloads';
+        localStorageController.saveViewOptions(viewOptions);
     }
 
     function scheduleAutosave() {
-        if (!localStorageController.firstCall) { return; }
-        localStorageController.firstCall = false;
+        if (!firstCall) { return; }
+        firstCall = false;
         if (typeof (Storage) === "undefined") { return; } // nothing to schedule since we can't get at local storage.
         setInterval(()=>localStorageController.saveCharacter(character), 5 * 1000);
     }

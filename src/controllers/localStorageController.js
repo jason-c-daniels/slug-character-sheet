@@ -2,7 +2,6 @@ import getNewCharacter from "../model/character"
 import ViewOptions from "../model/viewOptions";
 
 export default class LocalStorageController {
-
     constructor(
 
     ) {
