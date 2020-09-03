@@ -49,7 +49,7 @@
             // e.target.result should contain the text
             let text = e.target.result;
             character = JSON.parse(text);
-            showLoadPane = false;
+            hideLoadPane();
         };
         reader.readAsText(files[0]);
 
@@ -134,8 +134,8 @@
                 </mwc-radio-list-item>
             </mwc-list>
         </div>
-        <div slot="appContent">
-            <mwc-top-app-bar-fixed>
+        <div slot="appContent" style="height: 100vh; width: 100%;">
+            <mwc-top-app-bar-fixed style="height:100%">
                 <mwc-icon-button icon="menu" slot="navigationIcon"
                                  on:click={()=>drawerElement.open = !drawerElement.open}></mwc-icon-button>
                 <div slot="title"><span>{appSettings.applicationName}</span></div>
@@ -148,23 +148,23 @@
                 <mwc-icon-button icon="file_download" slot="actionItems" on:click={saveCharacter}
                                  {disabled}></mwc-icon-button>
                 <mwc-icon-button icon="print" slot="actionItems" on:click={printIt} {disabled}></mwc-icon-button>
-                <div id="content" style="margin: 10pt;">
-                    <div class="page">
-                        <CharacterSheet bind:character={character}/>
-                    </div>
-                    {#if printBothPages}
-                        <div class="page">
-                            <GameRules/>
-                        </div>
-                   {/if}
-                </div>
-            </mwc-top-app-bar-fixed>
 
-            {#if (showLoadPane)}
-                <div class="noprint file-loader">
-                    <Dropzone on:drop={handleFilesSelect} containerStyles="height:100%"/>
-                </div>
-            {/if}
+                {#if (showLoadPane)}
+                    <div id="content" class="noprint file-loader" style="height: 100%">
+                        <Dropzone on:drop={handleFilesSelect} containerStyles="height:92vh;color:#333333; background-color:#EFEFEF;"/>
+                    </div>
+                {:else}
+                    <div id="content" style="margin: 10pt;">
+                        <div class="page">
+                            <CharacterSheet bind:character={character}/>
+                        </div>
+                        {#if printBothPages}
+                            <div class="page">
+                                <GameRules/>
+                            </div>
+                        {/if}
+                    </div>                {/if}
+            </mwc-top-app-bar-fixed>
         </div>
     </mwc-drawer>
 </main>
