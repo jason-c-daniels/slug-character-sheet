@@ -10,3 +10,5 @@ The app features the basic things you would expect of a desktop app: new, load, 
 Since there is no "Name" field, the "saved" (downloaded) file will always be named the same. Be sure to rename it to something meaningful.
 
 As well the app uses localStorage to keep track of the most recent character you edited. It will reload that data on startup.
+
+You can view the app running here: https://jason-c-daniels.github.io/slug-character-sheet/
