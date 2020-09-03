@@ -139,14 +139,13 @@
                 <mwc-icon-button icon="menu" slot="navigationIcon"
                                  on:click={()=>drawerElement.open = !drawerElement.open}></mwc-icon-button>
                 <div slot="title"><span>{appSettings.applicationName}</span></div>
-                <mwc-icon-button icon="create" slot="actionItems" on:click={newCharacter} {disabled}></mwc-icon-button>
+                <mwc-icon-button icon="note_add" slot="actionItems" on:click={newCharacter} {disabled}></mwc-icon-button>
                 {#if showLoadPane}
-                    <mwc-icon-button icon="clear" slot="actionItems" on:click={hideLoadPane}></mwc-icon-button>
+                    <mwc-icon-button icon="cancel" slot="actionItems" on:click={hideLoadPane}></mwc-icon-button>
                 {:else}
-                    <mwc-icon-button icon="file_upload" slot="actionItems" on:click={loadCharacter}></mwc-icon-button>
+                    <mwc-icon-button icon="folder_open" slot="actionItems" on:click={loadCharacter}></mwc-icon-button>
                 {/if}
-                <mwc-icon-button icon="file_download" slot="actionItems" on:click={saveCharacter}
-                                 {disabled}></mwc-icon-button>
+                <mwc-icon-button icon="save" slot="actionItems" on:click={saveCharacter} {disabled}></mwc-icon-button>
                 <mwc-icon-button icon="print" slot="actionItems" on:click={printIt} {disabled}></mwc-icon-button>
 
                 {#if (showLoadPane)}
