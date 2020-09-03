@@ -12,10 +12,10 @@
     import '@material/mwc-list/mwc-radio-list-item';
     import CharacterSheet from "../components/CharacterSheet"
     import getNewCharacter from "../model/character"
-    import saveAs from 'file-saver';
+    import downloadToClient from 'file-saver';
     import Dropzone from "svelte-file-dropzone";
     import GameRules from "../components/GameRules/GameRules.svelte";
-
+    import LocalStorageController from '../controllers/localStorageController'
     export let appSettings = {applicationName: "WARNING: Please pass appSettings from within main.js props."};
 
     let drawerElement; // bind to the drawerElement component so we can open and close it.
@@ -25,20 +25,27 @@
     let disabled = "";
     let showLoadPane = false;
     let firstCall = true;
+    let saveAlsoDownloads = true;
+    let localStorageController = new LocalStorageController();
+    let character = localStorageController.loadFromLocalStorage();
+    printBothPages= localStorageController.printBothPages;
+    localStorageController.scheduleAutosave();
 
-    let character = loadFromLocalStorage();
-
-    function saveCharacter() {
+    function handleSaveCharacterClicked() {
         var blob = new Blob([JSON.stringify(character, null, 2)], {type: "text/plain;charset=utf-8"});
-        saveAs(blob, "character.slug");
+        localStorageController.printBothPages=printBothPages;
+        localStorageController.saveToLocalStorage(character);
+        if (saveAlsoDownloads) {
+            downloadToClient(blob, "character.slug");
+        }
     }
 
-    function loadCharacter() {
+    function handleLoadCharacterClicked() {
         showLoadPane = true;
         disabled = "disabled";
     }
 
-    function newCharacter() {
+    function handleNewCharacterClicked() {
         character = getNewCharacter();
     }
 
@@ -60,50 +67,17 @@
         disabled = "";
     }
 
-    function printIt() {
+    function handlePrintClicked() {
         setTimeout(() => window.print(), 500);
     }
 
-    function saveToLocalStorage() {
-        console.log("saveToLocalStorage");
-        if (typeof (Storage) !== "undefined") {
-            console.log("autosaving...");
-            // Code for localStorage/sessionStorage.
-            let text = JSON.stringify(character, null, 2);
-
-            console.log(text);
-            localStorage.setItem("slug-character-sheet", text);
-            localStorage.setItem("slug-print-both",printBothPages);
-        } else {
-            // Sorry! No Web Storage support... doing nothing
-            console.log("LocalStorage not supported. Did not save.");
-        }
-    }
-
-    function loadFromLocalStorage() {
-        console.log("loadFromLocalStorage");
-        if (typeof (Storage) === "undefined" || localStorage.getItem("slug-character-sheet") === null) {
-            console.log("LocalStorage not supported, or no prior sheet found. Creating new character instead.");
-            scheduleAutosave();
-            return getNewCharacter();
-        }
-        scheduleAutosave();
-        console.log("loading character...");
-        let text = localStorage.getItem("slug-character-sheet");
-        printBothPages = localStorage.getItem("slug-print-both") == true || localStorage.getItem("slug-print-both") === null;
-        console.log("loaded:", text);
-        return JSON.parse(text);
-    }
-
-    function scheduleAutosave() {
-        if (firstCall) {
-            firstCall = false;
-            setInterval(saveToLocalStorage, 5 * 1000);
-        }
-    }
     function handlePrintOptionSelected(e) {
         console.log('handlePrintOptionSelected');
         printBothPages = printOptionListElement.querySelectorAll('mwc-radio-list-item')[e.detail.index].value === 'printBothPages';
+    }
+
+    function handleSaveOptionSelected(e) {
+
     }
 </script>
 <style>
@@ -139,14 +113,14 @@
                 <mwc-icon-button icon="menu" slot="navigationIcon"
                                  on:click={()=>drawerElement.open = !drawerElement.open}></mwc-icon-button>
                 <div slot="title"><span>{appSettings.applicationName}</span></div>
-                <mwc-icon-button icon="note_add" slot="actionItems" on:click={newCharacter} {disabled}></mwc-icon-button>
+                <mwc-icon-button icon="note_add" slot="actionItems" on:click={handleNewCharacterClicked} {disabled}></mwc-icon-button>
                 {#if showLoadPane}
                     <mwc-icon-button icon="cancel" slot="actionItems" on:click={hideLoadPane}></mwc-icon-button>
                 {:else}
-                    <mwc-icon-button icon="folder_open" slot="actionItems" on:click={loadCharacter}></mwc-icon-button>
+                    <mwc-icon-button icon="folder_open" slot="actionItems" on:click={handleLoadCharacterClicked}></mwc-icon-button>
                 {/if}
-                <mwc-icon-button icon="save" slot="actionItems" on:click={saveCharacter} {disabled}></mwc-icon-button>
-                <mwc-icon-button icon="print" slot="actionItems" on:click={printIt} {disabled}></mwc-icon-button>
+                <mwc-icon-button icon="save" slot="actionItems" on:click={handleSaveCharacterClicked} {disabled}></mwc-icon-button>
+                <mwc-icon-button icon="print" slot="actionItems" on:click={handlePrintClicked} {disabled}></mwc-icon-button>
 
                 {#if (showLoadPane)}
                     <div id="content" class="noprint file-loader" style="height: 100%">
@@ -162,7 +136,8 @@
                                 <GameRules/>
                             </div>
                         {/if}
-                    </div>                {/if}
+                    </div>
+                {/if}
             </mwc-top-app-bar-fixed>
         </div>
     </mwc-drawer>
