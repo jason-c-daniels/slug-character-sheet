@@ -21,6 +21,7 @@
     let drawerElement; // bind to the drawerElement component so we can open and close it.
 
     let printOptionListElement;
+    let saveOptionsListElement;
     let printBothPages = true;
     let disabled = "";
     let showLoadPane = false;
@@ -29,7 +30,7 @@
     let localStorageController = new LocalStorageController();
     let character = localStorageController.loadFromLocalStorage();
     printBothPages= localStorageController.printBothPages;
-    localStorageController.scheduleAutosave();
+    scheduleAutosave();
 
     function handleSaveCharacterClicked() {
         var blob = new Blob([JSON.stringify(character, null, 2)], {type: "text/plain;charset=utf-8"});
@@ -59,7 +60,6 @@
             hideLoadPane();
         };
         reader.readAsText(files[0]);
-
     }
 
     function hideLoadPane() {
@@ -77,8 +77,17 @@
     }
 
     function handleSaveOptionSelected(e) {
-
+        console.log('handleSaveOptionSelected');
+        saveAlsoDownloads = saveOptionsListElement.querySelectorAll('mwc-radio-list-item')[e.detail.index].value === 'saveAlsoDownloads';
     }
+
+    function scheduleAutosave() {
+        if (!localStorageController.firstCall) { return; }
+        localStorageController.firstCall = false;
+        if (typeof (Storage) === "undefined") { return; } // nothing to schedule since we can't get at local storage.
+        setInterval(()=>localStorageController.saveToLocalStorage(character), 5 * 1000);
+    }
+
 </script>
 <style>
     @import "App.css";
@@ -101,10 +110,20 @@
         <span slot="title">Print Settings</span>
         <span slot="subtitle">What to print...</span>
         <div>
-            <mwc-list bind:this={printOptionListElement} on:selected={handlePrintOptionSelected} style="margin: 1em; 0">
-                <mwc-radio-list-item selected="{printBothPages}" value="printBothPages">Both Pages
+            <mwc-list multi bind:this={printOptionListElement} on:selected={handlePrintOptionSelected} style="margin: 1em; 0">
+                <mwc-radio-list-item group="a" selected="{printBothPages}" value="printBothPages">Both Pages
                 </mwc-radio-list-item>
-                <mwc-radio-list-item selected="{!printBothPages}" value="printOnlyCharacterSheet">Only the Character Sheet
+                <mwc-radio-list-item group="a" selected="{!printBothPages}" value="printOnlyCharacterSheet">Only the Character Sheet
+                </mwc-radio-list-item>
+                <li divider role="separator"></li>
+            </mwc-list>
+        </div>
+        <div>
+            <mwc-list multi bind:this={saveOptionsListElement} on:selected={handleSaveOptionSelected} style="margin: 1em;">
+                <h3 role="heading">Save options</h3>
+                <mwc-radio-list-item group="b" selected="{saveAlsoDownloads}" value="saveAlsoDownloads">Save also downloads
+                </mwc-radio-list-item>
+                <mwc-radio-list-item group="b" selected="{!saveAlsoDownloads}" value="saveDoesNotDownload">Save w/o downloading
                 </mwc-radio-list-item>
             </mwc-list>
         </div>

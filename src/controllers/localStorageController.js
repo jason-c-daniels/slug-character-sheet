@@ -3,7 +3,13 @@ import getNewCharacter from "../model/character"
 export default class LocalStorageController {
     printBothPages=true;
     firstCall=true;
-    constructor() {  }
+    constructor(
+        printBothPages=true,
+        firstCall=true
+    ) {
+        this.printBothPages=printBothPages;
+        this.firstCall=firstCall;
+    }
 
     saveToLocalStorage(character) {
         console.log("saveToLocalStorage");
@@ -31,13 +37,7 @@ export default class LocalStorageController {
         let text = localStorage.getItem("slug-character-sheet");
         this.printBothPages = localStorage.getItem("slug-print-both") === true.toString() || localStorage.getItem("slug-print-both") === null;
         console.log("loaded:", text);
+        if (text === "undefined" || text === "null") return getNewCharacter();
         return JSON.parse(text);
-    }
-
-    scheduleAutosave() {
-        if (!this.firstCall) { return; }
-        this.firstCall = false;
-        if (typeof (Storage) === "undefined") { return; } // nothing to schedule since we can't get at local storage.
-        setInterval(this.saveToLocalStorage, 5 * 1000);
     }
 }
