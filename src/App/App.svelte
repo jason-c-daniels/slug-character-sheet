@@ -35,17 +35,56 @@
     let basePath=url.origin+url.pathname;
     let snackBarText="Replace this with a real message";
 
-    let character = (url.searchParams.has('character'))
-                    ? JSON.parse(decodeURIComponent(url.searchParams.get("character")))
-                    : localStorageController.loadCharacter()
-    ;
+    let {tmpChar, charIsValid} = doInitialCharacterLoad();
+
+    let character = charIsValid ? tmpChar : getNewCharacter();
 
     if (url.searchParams.has('character')) {
         // now store it before we redirect
         localStorageController.saveCharacter(character);
         window.location.replace(basePath);
     }
+
     scheduleAutosave();
+
+    function doInitialCharacterLoad() {
+        let tmpChar;
+        let charIsValid = false;
+        try {
+            tmpChar = (url.searchParams.has('character'))
+                    ? JSON.parse(decodeURIComponent(url.searchParams.get("character")))
+                    : localStorageController.loadCharacter();
+            charIsValid = validateCharacter(tmpChar);
+        } catch {
+            charIsValid = false;
+        }
+        return {tmpChar, charIsValid};
+    }
+
+    function validateCharacter(validateMe) {
+        let result=true;
+        try {
+
+            /* TODO: There has to be a better way.
+                     like maybe a JSON DTD? */
+
+            // for now try accessing things in a way that will throw an exception.
+            let _ = validateMe.backgroundInfo.toString();
+            _ = validateMe.attributesSkillsAndTraits.toString() ;
+            _ = validateMe.weaponsPsiAndMagic.toString() ;
+            _ = validateMe.miscellaneousGear.toString() ;
+            _ = validateMe.notes.toString() ;
+
+            character=validateMe;
+        }
+        catch(err) {
+            setTimeout(()=> showSnackBar("Invalid data format encountered. Nothing loaded."),250);
+            result=false;
+        }
+        finally {
+        }
+        return result;
+    }
 
     function handleSaveCharacterClicked() {
         let blob = new Blob([JSON.stringify(character, null, 2)], {type: "text/plain;charset=utf-8"});
@@ -74,10 +113,20 @@
         const reader = new FileReader();
         reader.onload = function (e) {
             // e.target.result should contain the text
-            let text = e.target.result;
-            character = JSON.parse(text);
-            setTimeout(()=> showSnackBar("Character loaded from file."),250);
-            hideLoadPane();
+            try {
+                let text = e.target.result;
+                let tmpChar = JSON.parse(text);
+                if (validateCharacter(tmpChar)) {
+                    setTimeout(() => showSnackBar("Character loaded from file."), 250);
+                    character=tmpChar;
+                }
+            }
+            catch(err) {
+                setTimeout(()=> showSnackBar("Invalid data format encountered. Nothing loaded."),250);
+            }
+            finally {
+                hideLoadPane();
+            }
         };
         reader.readAsText(files[0]);
     }
