@@ -33,6 +33,7 @@
     let viewOptions = localStorageController.loadViewOptions();
     let url=new URL(window.location);
     let basePath=url.origin+url.pathname;
+    let snackBarText="Replace this with a real message";
 
     let character = (url.searchParams.has('character'))
                     ? JSON.parse(decodeURIComponent(url.searchParams.get("character")))
@@ -49,8 +50,12 @@
     function handleSaveCharacterClicked() {
         let blob = new Blob([JSON.stringify(character, null, 2)], {type: "text/plain;charset=utf-8"});
         localStorageController.saveCharacter(character);
+        showSnackBar("Character saved to local storage.");
         if (viewOptions.saveAlsoDownloads) {
-            downloadToClient(blob, "character.slug");
+            setTimeout(() => {
+                        downloadToClient(blob, "character.slug");
+                        showSnackBar("Sending file: 'character.slug'. Check your downloads folder.")
+                    }, 2000);
         }
     }
 
@@ -61,6 +66,7 @@
 
     function handleNewCharacterClicked() {
         character = getNewCharacter();
+        showSnackBar("Created new character.");
     }
 
     function handleFilesSelect(e) {
@@ -70,6 +76,7 @@
             // e.target.result should contain the text
             let text = e.target.result;
             character = JSON.parse(text);
+            setTimeout(()=> showSnackBar("Character loaded from file."),250);
             hideLoadPane();
         };
         reader.readAsText(files[0]);
@@ -96,12 +103,6 @@
         localStorageController.saveViewOptions(viewOptions);
     }
 
-    function handleCopyUrlClicked(e) {
-        let text=basePath+`?character=${encodeURIComponent(JSON.stringify(character))}`;
-        navigator.clipboard.writeText(text);
-        snackBarElement.show();
-    }
-
     function scheduleAutosave() {
         if (!firstCall) { return; }
         firstCall = false;
@@ -109,6 +110,10 @@
         setInterval(()=>localStorageController.saveCharacter(character), 5 * 1000);
     }
 
+    function showSnackBar(text) {
+        snackBarText=text;
+        snackBarElement.show();
+    }
 </script>
 <style>
     @import "App.css";
@@ -159,7 +164,6 @@
                 {:else}
                     <mwc-icon-button icon="folder_open" slot="actionItems" on:click={handleLoadCharacterClicked}></mwc-icon-button>
                 {/if}
-                <mwc-icon-button icon="link" slot="actionItems" on:click={handleCopyUrlClicked} {disabled}></mwc-icon-button>
                 <mwc-icon-button icon="save" slot="actionItems" on:click={handleSaveCharacterClicked} {disabled}></mwc-icon-button>
                 <mwc-icon-button icon="print" slot="actionItems" on:click={handlePrintClicked} {disabled}></mwc-icon-button>
 
@@ -177,7 +181,7 @@
                                 <GameRules/>
                             </div>
                         {/if}
-                        <mwc-snackbar labelText="URL Copied to clipboard" bind:this={snackBarElement}>
+                        <mwc-snackbar labelText="{snackBarText}" bind:this={snackBarElement}>
                             <mwc-icon-button icon="close" slot="dismiss"></mwc-icon-button>
                         </mwc-snackbar>
                     </div>
