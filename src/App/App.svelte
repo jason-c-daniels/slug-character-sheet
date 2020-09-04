@@ -10,6 +10,7 @@
     import '@material/mwc-list/mwc-list-item';
     import '@material/mwc-list/mwc-check-list-item';
     import '@material/mwc-list/mwc-radio-list-item';
+    import '@material/mwc-snackbar';
     import CharacterSheet from "../components/CharacterSheet"
     import getNewCharacter from "../model/character"
     import downloadToClient from 'file-saver';
@@ -20,16 +21,29 @@
 
     let drawerElement; // bind to the drawerElement component so that we can open and close it.
 
-    let printOptionListElement;
-    let saveOptionsListElement;
+    let printOptionListElement,
+            snackBarElement,
+            saveOptionsListElement;
+
     let disabled = "";
     let showLoadPane = false;
     let firstCall = true;
     let saveAlsoDownloads = true;
     let localStorageController = new LocalStorageController();
-    let character = localStorageController.loadCharacter();
     let viewOptions = localStorageController.loadViewOptions();
+    let url=new URL(window.location);
+    let basePath=url.origin+url.pathname;
 
+    let character = (url.searchParams.has('character'))
+                    ? JSON.parse(decodeURIComponent(url.searchParams.get("character")))
+                    : localStorageController.loadCharacter()
+    ;
+
+    if (url.searchParams.has('character')) {
+        // now store it before we redirect
+        localStorageController.saveCharacter(character);
+        window.location.replace(basePath);
+    }
     scheduleAutosave();
 
     function handleSaveCharacterClicked() {
@@ -80,6 +94,12 @@
         console.log('handleSaveOptionSelected');
         viewOptions.saveAlsoDownloads = saveOptionsListElement.querySelectorAll('mwc-radio-list-item')[e.detail.index].value === 'saveAlsoDownloads';
         localStorageController.saveViewOptions(viewOptions);
+    }
+
+    function handleCopyUrlClicked(e) {
+        let text=basePath+`?character=${encodeURIComponent(JSON.stringify(character))}`;
+        navigator.clipboard.writeText(text);
+        snackBarElement.show();
     }
 
     function scheduleAutosave() {
@@ -139,6 +159,7 @@
                 {:else}
                     <mwc-icon-button icon="folder_open" slot="actionItems" on:click={handleLoadCharacterClicked}></mwc-icon-button>
                 {/if}
+                <mwc-icon-button icon="link" slot="actionItems" on:click={handleCopyUrlClicked} {disabled}></mwc-icon-button>
                 <mwc-icon-button icon="save" slot="actionItems" on:click={handleSaveCharacterClicked} {disabled}></mwc-icon-button>
                 <mwc-icon-button icon="print" slot="actionItems" on:click={handlePrintClicked} {disabled}></mwc-icon-button>
 
@@ -156,6 +177,9 @@
                                 <GameRules/>
                             </div>
                         {/if}
+                        <mwc-snackbar labelText="URL Copied to clipboard" bind:this={snackBarElement}>
+                            <mwc-icon-button icon="close" slot="dismiss"></mwc-icon-button>
+                        </mwc-snackbar>
                     </div>
                 {/if}
             </mwc-top-app-bar-fixed>
