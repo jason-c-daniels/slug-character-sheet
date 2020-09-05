@@ -78,6 +78,7 @@
             character=validateMe;
         }
         catch(err) {
+            console.log(err);
             setTimeout(()=> showSnackBar("Invalid data format encountered. Nothing loaded."),250);
             result=false;
         }
@@ -122,6 +123,7 @@
                 }
             }
             catch(err) {
+                console.log(err);
                 setTimeout(()=> showSnackBar("Invalid data format encountered. Nothing loaded."),250);
             }
             finally {
