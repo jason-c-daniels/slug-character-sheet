@@ -1,9 +1,0 @@
-@font-face {
-    font-family: 'Shadows Into Light';
-    src: url('../fonts/shadows/subset-ShadowsIntoLight.woff2') format('woff2'),
-         url('../fonts/shadows/subset-ShadowsIntoLight.woff') format('woff');
-    font-weight: 300;
-    font-style: normal;
-    font-display: swap;
-}
-

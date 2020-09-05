@@ -1,6 +1,0 @@
-/* import fonts here, if self hosting, place WOFF files and associated CSS in public/fonts and import the font specific CSS here. */
-
-@import '../../public/fonts/work-sans/work-sans.css';
-@import '../../public/fonts/mali/mali.css';
-@import "../../public/fonts/eb-garamond/eb-garamond.css";
-@import "../../public/fonts/shadows/shadows.css";
