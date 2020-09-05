@@ -74,8 +74,6 @@
             _ = validateMe.weaponsPsiAndMagic.toString() ;
             _ = validateMe.miscellaneousGear.toString() ;
             _ = validateMe.notes.toString() ;
-
-            character=validateMe;
         }
         catch(err) {
             console.log(err);
